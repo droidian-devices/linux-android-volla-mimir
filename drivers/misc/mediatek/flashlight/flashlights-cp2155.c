@@ -465,7 +465,7 @@ static int cp2155_probe(struct platform_device *pdev)
 	/* init timer */
 	hrtimer_init(&cp2155_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 	cp2155_timer.function = cp2155_timer_func;
-	cp2155_timeout_ms = 100;
+	cp2155_timeout_ms = 0;
 
 	/* init chip hw */
 	cp2155_chip_init();
