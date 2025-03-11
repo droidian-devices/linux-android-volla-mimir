@@ -1015,6 +1015,8 @@ int himax_input_register(struct himax_ts_data *ts)
 	input_set_abs_params(ts->stylus_dev, ABS_Y, ts->pdata->abs_y_min,
 			((ts->pdata->abs_y_max+1)*hx_s_ic_data->stylus_ratio-1),
 			ts->pdata->abs_y_fuzz, 0);
+	input_abs_set_res(ts->stylus_dev, ABS_X, 200);
+	input_abs_set_res(ts->stylus_dev, ABS_Y, 200);
 
 	if (himax_input_register_device(ts->stylus_dev) == 0) {
 		ret = NO_ERR;
