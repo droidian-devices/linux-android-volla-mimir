@@ -90,7 +90,7 @@ echo " id=$(my_dtb_id)" >>$(2);\
 $(eval my_dtb_id:=$(shell echo $$(($(my_dtb_id)+1))))
 endef
 
-dtbs: $(objtree)/dtboimg.cfg $(objtree)/dtbimg.cfg
+dtbs: $(objtree)/dtboimg.cfg $(objtree)/dtbimg.cfg drvgen
 $(objtree)/dtboimg.cfg: FORCE
 	rm -f $@.tmp
 	$(foreach f,$(ABS_DTB_FILES),$(call mk_dtboimg_cfg,$(f),$@.tmp))
