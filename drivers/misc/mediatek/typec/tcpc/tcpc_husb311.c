@@ -184,15 +184,21 @@ static int husb311_read_device(void *client, u32 reg, int len, void *dst)
 {
 	struct i2c_client *i2c = client;
 	int ret = 0, count = 5;
+#if ENABLE_HUSB311_DBG
 	u64 t1 = 0, t2 = 0;
+#endif
 
 	while (1) {
+#if ENABLE_HUSB311_DBG
 		t1 = local_clock();
+#endif
 		ret = i2c_smbus_read_i2c_block_data(i2c, reg, len, dst);
+#if ENABLE_HUSB311_DBG
 		t2 = local_clock();
 		t2 -= t1;
 		HUSB311_INFO("%s del = %lluus, reg = %02X, len = %d\n",
 			    __func__, do_div(t2, NSEC_PER_USEC), reg, len);
+#endif
 		if (ret < 0 && count > 1)
 			count--;
 		else
@@ -206,15 +212,21 @@ static int husb311_write_device(void *client, u32 reg, int len, const void *src)
 {
 	struct i2c_client *i2c = client;
 	int ret = 0, count = 5;
+#if ENABLE_HUSB311_DBG
 	u64 t1 = 0, t2 = 0;
+#endif
 
 	while (1) {
+#if ENABLE_HUSB311_DBG
 		t1 = local_clock();
+#endif
 		ret = i2c_smbus_write_i2c_block_data(i2c, reg, len, src);
+#if ENABLE_HUSB311_DBG
 		t2 = local_clock();
 		t2 -= t1;
 		HUSB311_INFO("%s del = %lluus, reg = %02X, len = %d\n",
 			    __func__, do_div(t2, NSEC_PER_USEC), reg, len);
+#endif
 		if (ret < 0 && count > 1)
 			count--;
 		else
@@ -698,16 +710,16 @@ static int husb311_set_clock_gating(struct tcpc_device *tcpc, bool en)
 
 #ifdef CONFIG_TCPC_CLOCK_GATING
 	int i = 0;
-	uint8_t clk2 = HUSB311_REG_CLK_DIV_600K_EN
-		| HUSB311_REG_CLK_DIV_300K_EN | HUSB311_REG_CLK_CK_300K_EN;
-	uint8_t clk3 = HUSB311_REG_CLK_DIV_2P4M_EN;
+	//uint8_t clk2 = HUSB311_REG_CLK_DIV_600K_EN
+	//	| HUSB311_REG_CLK_DIV_300K_EN | HUSB311_REG_CLK_CK_300K_EN;
+	//uint8_t clk3 = HUSB311_REG_CLK_DIV_2P4M_EN;
 
-	if (!en) {
-		clk2 |=
-			HUSB311_REG_CLK_BCLK2_EN | HUSB311_REG_CLK_BCLK_EN;
-		clk3 |=
-			HUSB311_REG_CLK_CK_24M_EN | HUSB311_REG_CLK_PCLK_EN;
-	}
+	//if (!en) {
+	//	clk2 |=
+	//		HUSB311_REG_CLK_BCLK2_EN | HUSB311_REG_CLK_BCLK_EN;
+	//	clk3 |=
+	//		HUSB311_REG_CLK_CK_24M_EN | HUSB311_REG_CLK_PCLK_EN;
+	//}
 
 	if (en) {
 		for (i = 0; i < 2; i++)
@@ -753,7 +765,7 @@ static inline int husb311_init_cc_params(
 static int husb311_tcpc_init(struct tcpc_device *tcpc, bool sw_reset)
 {
 	int ret;
-	bool retry_discard_old = false;
+	//bool retry_discard_old = false;
 	struct husb311_chip *chip = tcpc_get_dev_data(tcpc);
 
 	HUSB311_INFO("\n");
@@ -801,8 +813,8 @@ static int husb311_tcpc_init(struct tcpc_device *tcpc, bool sw_reset)
 	if (!sw_reset)
 		husb311_set_clock_gating(tcpc, true);
 
-	if (!(tcpc->tcpc_flags & TCPC_FLAGS_RETRY_CRC_DISCARD))
-		retry_discard_old = true;
+	//if (!(tcpc->tcpc_flags & TCPC_FLAGS_RETRY_CRC_DISCARD))
+	//	retry_discard_old = true;
 
 
 	tcpci_alert_status_clear(tcpc, 0xffffffff);
@@ -835,13 +847,13 @@ static inline int husb311_fault_status_vconn_ov(struct tcpc_device *tcpc)
 
 int husb311_fault_status_clear(struct tcpc_device *tcpc, uint8_t status)
 {
-	int ret;
+	int ret = 0;
 
 	if (status & TCPC_V10_REG_FAULT_STATUS_VCONN_OV)
 		ret = husb311_fault_status_vconn_ov(tcpc);
 
 	husb311_i2c_write8(tcpc, TCPC_V10_REG_FAULT_STATUS, status);
-	return 0;
+	return ret;
 }
 /*
 int husb311_get_chip_id(struct tcpc_device *tcpc, uint32_t *chip_id)
