@@ -159,3 +159,4 @@ x509.genkey
 sphinx_*/
 # Added by droidian-new-device
 !debian/
+!.circleci
