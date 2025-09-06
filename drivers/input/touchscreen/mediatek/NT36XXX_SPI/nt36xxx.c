@@ -1048,6 +1048,7 @@ static int32_t nvt_parse_dt(struct device *dev)
 		NVT_LOG("SPI_RD_FAST_ADDR=0x%06X\n", SPI_RD_FAST_ADDR);
 	}
 
+#if IS_ENABLED(CONFIG_DRM_MEDIATEK)
     spi_pinctrl = devm_pinctrl_get(dev);
     if (IS_ERR(spi_pinctrl)) {
         ret = PTR_ERR(spi_pinctrl);
@@ -1068,6 +1069,7 @@ static int32_t nvt_parse_dt(struct device *dev)
         }
         pinctrl_ok = true;
     }
+#endif
 
 	return ret;
 }
@@ -2298,6 +2300,7 @@ Description:
 return:
 	Executive outcomes. 0---succeed.
 *******************************************************/
+#if IS_ENABLED(CONFIG_DRM_MEDIATEK)
 static int32_t nvt_ts_suspend(struct device *dev)
 {
 	uint8_t buf[4] = {0};
@@ -2429,7 +2432,6 @@ static int32_t nvt_ts_resume(struct device *dev)
 	return 0;
 }
 
-#if IS_ENABLED(CONFIG_DRM_MEDIATEK)
 /**
  * gt9896s_ts_disp_notifier_callback - mtk display notifier callback
  * Called by kernel during framebuffer blanck/unblank phrase

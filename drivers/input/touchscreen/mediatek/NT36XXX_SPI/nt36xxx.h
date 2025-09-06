@@ -213,4 +213,7 @@ int32_t nvt_write_addr(uint32_t addr, uint8_t data);
 extern void nvt_esd_check_enable(uint8_t enable);
 #endif /* #if NVT_TOUCH_ESD_PROTECT */
 
+extern unsigned int DISP_GetScreenHeight(void);
+extern unsigned int DISP_GetScreenWidth(void);
+
 #endif /* _LINUX_NVT_TOUCH_H */
